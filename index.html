@@ -1339,10 +1339,10 @@ function setPeriod(el,label){
 
 function updatePeriodData(period){
   const data = {
-    'Hoy':       ['$2,450.00','142','$17.25','315'],
-    'Esta Semana':['$14,820.00','983','$15.08','2,140'],
-    'Este Mes':  ['$58,400.00','3,920','$14.90','8,710'],
-    'Este Año':  ['$682,100.00','45,200','$15.09','98,440'],
+    'Hoy':        ['$0.00','0','$0.00','0'],
+    'Esta Semana':['$0.00','0','$0.00','0'],
+    'Este Mes':   ['$0.00','0','$0.00','0'],
+    'Este Año':   ['$0.00','0','$0.00','0'],
   };
   const d = data[period]||data['Hoy'];
   document.getElementById('sv-total').textContent = d[0];
@@ -1386,107 +1386,27 @@ document.addEventListener('click',e=>{
 // --- LINE CHART ---
 function drawLineChart(){
   const svg = document.getElementById('line-chart');
-  const W=400,H=130,pad=30;
-  const actual = [120,180,140,200,160,240,200,280,250,300,260,320];
-  const anterior= [100,150,120,170,140,210,180,240,220,270,230,290];
-  const maxV = Math.max(...actual,...anterior);
-  function pts(arr){
-    return arr.map((v,i)=>{
-      const x = pad + i*(W-2*pad)/(arr.length-1);
-      const y = H-pad - (v/maxV)*(H-2*pad);
-      return `${x},${y}`;
-    }).join(' ');
-  }
-  function area(arr,color,opacity){
-    const pts2 = arr.map((v,i)=>{
-      const x = pad + i*(W-2*pad)/(arr.length-1);
-      const y = H-pad - (v/maxV)*(H-2*pad);
-      return [x,y];
-    });
-    const top = pts2.map(p=>p.join(',')).join(' ');
-    const bot = `${pts2[pts2.length-1][0]},${H-pad} ${pts2[0][0]},${H-pad}`;
-    return `<polygon points="${top} ${bot}" fill="${color}" fill-opacity="${opacity}"/>`;
-  }
-  // Grid lines
-  let grid='';
-  for(let i=0;i<=4;i++){
-    const y = pad + i*(H-2*pad)/4;
-    grid+=`<line x1="${pad}" y1="${y}" x2="${W-pad}" y2="${y}" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>`;
-  }
-  svg.innerHTML = grid
-    + area(anterior,'#94a3b8',0.05)
-    + area(actual,'#f97316',0.12)
-    + `<polyline points="${pts(anterior)}" fill="none" stroke="rgba(148,163,184,0.4)" stroke-width="1.5" stroke-dasharray="4,4"/>`
-    + `<polyline points="${pts(actual)}" fill="none" stroke="#f97316" stroke-width="2.5"/>`;
+  if(!svg) return;
+  svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#475569" font-size="13" font-family="Plus Jakarta Sans">Sin datos aún</text>';
 }
 
 // --- DONUT CHART ---
 function drawDonut(){
-  const cats = [
-    {name:'Platos fuertes',val:42,color:'#f97316'},
-    {name:'Bebidas',val:28,color:'#3b82f6'},
-    {name:'Entradas',val:16,color:'#22c55e'},
-    {name:'Postres',val:9,color:'#a855f7'},
-    {name:'Otros',val:5,color:'#eab308'},
-  ];
-  const cx=60,cy=60,r=45,inner=28;
-  let angle = -Math.PI/2;
-  const total = cats.reduce((s,c)=>s+c.val,0);
-  let paths='';
-  cats.forEach(c=>{
-    const frac = c.val/total;
-    const a1 = angle, a2 = angle + frac*2*Math.PI;
-    const x1=cx+r*Math.cos(a1),y1=cy+r*Math.sin(a1);
-    const x2=cx+r*Math.cos(a2),y2=cy+r*Math.sin(a2);
-    const xi1=cx+inner*Math.cos(a1),yi1=cy+inner*Math.sin(a1);
-    const xi2=cx+inner*Math.cos(a2),yi2=cy+inner*Math.sin(a2);
-    const large = frac>.5?1:0;
-    paths+=`<path d="M${xi1},${yi1} L${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} L${xi2},${yi2} A${inner},${inner} 0 ${large},0 ${xi1},${yi1}" fill="${c.color}" opacity="0.9"/>`;
-    angle = a2;
-  });
-  document.getElementById('donut-chart').innerHTML = paths;
+  const el = document.getElementById('donut-chart');
+  if(el) el.innerHTML = '<text x="60" y="65" text-anchor="middle" fill="#475569" font-size="11" font-family="Plus Jakarta Sans">Sin datos</text>';
   const legend = document.getElementById('donut-legend');
-  legend.innerHTML = cats.map(c=>`
-    <div class="donut-legend-item">
-      <div class="donut-legend-dot" style="background:${c.color}"></div>
-      <span>${c.name}</span>
-      <span class="donut-legend-pct">${c.val}%</span>
-    </div>`).join('');
+  if(legend) legend.innerHTML = '';
 }
 
 // --- TOP DISHES ---
 function drawTopDishes(){
-  const dishes = [
-    {name:'Hamburguesa Clásica',units:142},
-    {name:'Pizza Margarita',units:118},
-    {name:'Tacos al Pastor',units:97},
-    {name:'Pasta Carbonara',units:84},
-    {name:'Ensalada César',units:71},
-  ];
-  const max = dishes[0].units;
-  document.getElementById('top-dishes').innerHTML = dishes.map((d,i)=>`
-    <div class="top-dish">
-      <div class="dish-rank ${i===0?'r1':i===1?'r2':i===2?'r3':''}">${i+1}</div>
-      <div class="dish-name">${d.name}</div>
-      <div class="dish-bar-wrap"><div class="dish-bar" style="width:${d.units/max*100}%"></div></div>
-      <div class="dish-units">${d.units}</div>
-    </div>`).join('');
+  const el = document.getElementById('top-dishes');
+  if(el) el.innerHTML = '<p style="color:var(--text3);font-size:13px;text-align:center;padding:20px 0;">Sin datos aún</p>';
 }
 
-// --- BAR CHART ---
 function drawBarChart(){
-  const hours = ['10','11','12','13','14','15','16','17','18','19','20','21'];
-  const vals =  [8,14,28,35,22,16,12,18,32,54,85,62];
-  const max = Math.max(...vals);
   const wrap = document.getElementById('bar-chart');
-  wrap.innerHTML = hours.map((h,i)=>{
-    const pct = vals[i]/max*100;
-    const color = vals[i]===max?'var(--accent)':'rgba(249,115,22,0.35)';
-    return `<div class="bar-col">
-      <div class="bar" style="height:${pct}%;background:${color};min-height:4px;" title="${vals[i]} órdenes a las ${h}:00"></div>
-      <div class="bar-label">${h}</div>
-    </div>`;
-  }).join('');
+  if(wrap) wrap.innerHTML = '<p style="color:var(--text3);font-size:13px;text-align:center;width:100%;">Sin datos aún</p>';
 }
 
 // --- KANBAN ---
