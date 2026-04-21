@@ -652,15 +652,15 @@ tr:hover td{background:rgba(255,255,255,0.02);}
       <div class="ventas-summary">
         <div class="payment-card">
           <div class="payment-label">Pagos en Efectivo</div>
-          <div class="payment-value" style="color:var(--green)">$850.00</div>
+          <div class="payment-value" style="color:var(--green)" id="pay-cash">$0.00</div>
         </div>
         <div class="payment-card">
           <div class="payment-label">Tarjetas de Crédito/Débito</div>
-          <div class="payment-value" style="color:var(--blue)">$1,450.00</div>
+          <div class="payment-value" style="color:var(--blue)" id="pay-card">$0.00</div>
         </div>
         <div class="payment-card">
           <div class="payment-label">Apps (Uber Eats/Rappi)</div>
-          <div class="payment-value" style="color:var(--purple)">$150.00</div>
+          <div class="payment-value" style="color:var(--purple)" id="pay-app">$0.00</div>
         </div>
       </div>
       <div class="table-wrap">
@@ -1565,14 +1565,25 @@ const salesData = [];
 function renderSales(){
   const methods = {cash:'<span class="method-badge method-cash">💵 Efectivo</span>',card:'<span class="method-badge method-card">💳 Tarjeta</span>',app:'<span class="method-badge method-app">📱 App</span>'};
   const statusL = {paid:'<span class="order-status status-paid">Pagado</span>',pending2:'<span class="order-status status-pending2">Pendiente</span>'};
-  document.getElementById('sales-table').innerHTML = salesData.map(r=>`
+  document.getElementById('sales-table').innerHTML = salesData.length
+    ? salesData.map(r=>`
     <tr>
       <td style="font-family:'JetBrains Mono',monospace;color:var(--text);">${r.id}</td>
       <td>${r.time}</td><td>${r.mesa}</td>
       <td>${methods[r.method]}</td>
       <td style="font-weight:600;color:var(--text);">${r.total}</td>
-      <td>${statusL[r.status]}</td>
-    </tr>`).join('');
+      <td>${statusL[r.status]||r.status}</td>
+    </tr>`).join('')
+    : '<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:30px;">Sin transacciones registradas</td></tr>';
+  // Calcular totales por método
+  const totals = {cash:0, card:0, app:0};
+  salesData.forEach(r=>{
+    const val = parseFloat(r.total.replace(/[^0-9.]/g,'')) || 0;
+    if(totals[r.method]!==undefined) totals[r.method] += val;
+  });
+  document.getElementById('pay-cash').textContent = '$'+totals.cash.toFixed(2);
+  document.getElementById('pay-card').textContent = '$'+totals.card.toFixed(2);
+  document.getElementById('pay-app').textContent  = '$'+totals.app.toFixed(2);
 }
 
 function clearSalesTable(){
