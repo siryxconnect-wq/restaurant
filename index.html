@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GastroDash — Dashboard Analítico</title>
+<title>GastroDash — Dashboard Analítico v2</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -1592,12 +1595,13 @@ function clearSalesTable(){
   renderSales();
   mostrarToast('🗑 Tabla de ventas limpiada', 'green');
 }
+
+function exportCSV(){
   const rows = [['ID','Hora','Mesa','Método','Total','Estado'],...salesData.map(r=>[r.id,r.time,r.mesa,r.method,r.total,r.status])];
   const csv = rows.map(r=>r.join(',')).join('\n');
   const a=document.createElement('a');
   a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
   a.download='ventas-gastrodash.csv';a.click();
-  // Sync all visible sales to Sheets
   salesData.forEach(r => enviarASheets({ tipo:'venta', ...r }, 'Venta '+r.id));
 }
 
