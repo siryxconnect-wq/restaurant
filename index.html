@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GastroDash — Dashboard Analítico v2</title>
+<title>GastroSiryx — Dashboard Analítico v2</title>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -436,7 +436,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 <!-- PIN SCREEN -->
 <div id="pin-screen">
   <div class="pin-box">
-    <div class="pin-logo">Gastro<span>Dash</span></div>
+    <div class="pin-logo">Gastro<span>Siryx</span></div>
     <div class="pin-sub">Ingresa tu PIN de acceso</div>
     <div class="pin-display" id="pin-display">
       <span id="pin-dots" style="letter-spacing:12px;color:var(--text3)">––––</span>
@@ -464,7 +464,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="sidebar-logo">Gastro<span>Dash</span></div>
+    <div class="sidebar-logo">Gastro<span>Siryx</span></div>
     <nav class="sidebar-nav">
       <button class="nav-item active" onclick="showSection('resumen',this)">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
@@ -526,23 +526,23 @@ tr:hover td{background:rgba(255,255,255,0.02);}
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-label">Ventas Totales</div>
-          <div class="stat-value" id="sv-total">$2,450.00</div>
-          <span class="stat-delta up">▲ +12.5%</span><span class="stat-vs">vs ayer</span>
+          <div class="stat-value" id="sv-total">$0.00</div>
+          <span class="stat-delta up">— </span><span class="stat-vs">sin datos</span>
         </div>
         <div class="stat-card">
           <div class="stat-label">Órdenes</div>
-          <div class="stat-value" id="sv-orders">142</div>
-          <span class="stat-delta up">▲ +5.2%</span><span class="stat-vs">vs ayer</span>
+          <div class="stat-value" id="sv-orders">0</div>
+          <span class="stat-delta up">— </span><span class="stat-vs">sin datos</span>
         </div>
         <div class="stat-card">
           <div class="stat-label">Ticket Promedio</div>
-          <div class="stat-value" id="sv-ticket">$17.25</div>
-          <span class="stat-delta down">▼ -1.1%</span><span class="stat-vs">vs ayer</span>
+          <div class="stat-value" id="sv-ticket">$0.00</div>
+          <span class="stat-delta up">— </span><span class="stat-vs">sin datos</span>
         </div>
         <div class="stat-card">
           <div class="stat-label">Comensales</div>
-          <div class="stat-value" id="sv-diners">315</div>
-          <span class="stat-delta up">▲ +18.4%</span><span class="stat-vs">vs ayer</span>
+          <div class="stat-value" id="sv-diners">0</div>
+          <span class="stat-delta up">— </span><span class="stat-vs">sin datos</span>
         </div>
       </div>
 
@@ -551,16 +551,16 @@ tr:hover td{background:rgba(255,255,255,0.02);}
           <div class="hl-icon">🏆</div>
           <div>
             <div class="hl-label">Mesa Estrella del Día</div>
-            <div class="hl-val">Mesa 2</div>
-            <div class="hl-sub">$120.00 en una sola cuenta</div>
+            <div class="hl-val">—</div>
+            <div class="hl-sub">Sin datos aún</div>
           </div>
         </div>
         <div class="hl-card">
           <div class="hl-icon">⏰</div>
           <div>
             <div class="hl-label">Hora Más Rentable</div>
-            <div class="hl-val">8:00 PM</div>
-            <div class="hl-sub">85 órdenes en ese intervalo</div>
+            <div class="hl-val">—</div>
+            <div class="hl-sub">Sin datos aún</div>
           </div>
         </div>
       </div>
@@ -1220,7 +1220,7 @@ async function testSheetsConnection(btn){
       id: 'TEST-' + Date.now(),
       time: new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'}),
       table: 'Prueba de Conexión',
-      items: 'Test GastroDash',
+      items: 'Test GastroSiryx',
       total: '$0.00',
       status: 'pending',
       urgent: false
@@ -1490,13 +1490,8 @@ function drawBarChart(){
 }
 
 // --- KANBAN ---
-let orders = [
-  {id:'A-041',table:'Mesa 4',items:'2× Burger Clásica\n1× Limonada',total:'$42.50',status:'pending',time:'18:42',urgent:false},
-  {id:'A-042',table:'Mesa 7',items:'3× Pizza BBQ\n2× Cerveza Artesanal',total:'$78.00',status:'pending',time:'18:38',urgent:true},
-  {id:'A-043',table:'Mesa 2',items:'1× Pasta Carbonara\n1× Vino Tinto',total:'$35.00',status:'prep',time:'18:30',urgent:false},
-  {id:'A-044',table:'Mesa 1',items:'2× Tacos al Pastor\n1× Agua Fresca',total:'$28.00',status:'ready',time:'18:20',urgent:false},
-];
-let orderCounter = 44;
+let orders = [];
+let orderCounter = 0;
 let dragId = null;
 
 function renderKanban(){
@@ -1566,16 +1561,7 @@ function addNewOrder(){
 }
 
 // --- SALES TABLE ---
-const salesData = [
-  {id:'#A-040',time:'19:05','mesa':'Mesa 8','method':'card','total':'$54.00','status':'paid'},
-  {id:'#A-039',time:'18:58','mesa':'Mesa 3','method':'cash','total':'$28.50','status':'paid'},
-  {id:'#A-038',time:'18:45','mesa':'Domicilio','method':'app','total':'$35.00','status':'paid'},
-  {id:'#A-037',time:'18:32','mesa':'Mesa 5','method':'card','total':'$88.00','status':'paid'},
-  {id:'#A-036',time:'18:20','mesa':'Mesa 1','method':'cash','total':'$22.00','status':'paid'},
-  {id:'#A-035',time:'18:05','mesa':'Mesa 6','method':'card','total':'$62.50','status':'paid'},
-  {id:'#A-034',time:'17:50','mesa':'Domicilio','method':'app','total':'$41.00','status':'pending2'},
-  {id:'#A-033',time:'17:38','mesa':'Mesa 2','method':'cash','total':'$19.00','status':'paid'},
-];
+const salesData = [];
 function renderSales(){
   const methods = {cash:'<span class="method-badge method-cash">💵 Efectivo</span>',card:'<span class="method-badge method-card">💳 Tarjeta</span>',app:'<span class="method-badge method-app">📱 App</span>'};
   const statusL = {paid:'<span class="order-status status-paid">Pagado</span>',pending2:'<span class="order-status status-pending2">Pendiente</span>'};
@@ -1606,14 +1592,7 @@ function exportCSV(){
 }
 
 // --- CLIENTS ---
-const clientsData = [
-  {name:'Ana Torres',initials:'AT',color:'#f97316',visits:28,total:'$842.00',avg:'$30.07',last:'Hace 2 días'},
-  {name:'Roberto Lima',initials:'RL',color:'#3b82f6',visits:21,total:'$630.00',avg:'$30.00',last:'Hoy'},
-  {name:'Carmen Vega',initials:'CV',color:'#22c55e',visits:19,total:'$570.00',avg:'$30.00',last:'Ayer'},
-  {name:'Pedro Salas',initials:'PS',color:'#a855f7',visits:15,total:'$450.00',avg:'$30.00',last:'Hace 3 días'},
-  {name:'Laura Ríos',initials:'LR',color:'#eab308',visits:12,total:'$360.00',avg:'$30.00',last:'Hace 5 días'},
-  {name:'Marcos Gil',initials:'MG',color:'#ef4444',visits:9,total:'$270.00',avg:'$30.00',last:'Hace 1 semana'},
-];
+const clientsData = [];
 function renderClients(filter=''){
   const filtered = clientsData.filter(c=>c.name.toLowerCase().includes(filter.toLowerCase()));
   const grid = document.getElementById('clients-grid');
